@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <body style="padding-left:50px;padding-top:30px">
+
+        <h2>Pobierz kurs z NBP</h2>
+        <button type="button" onclick="getJSON()">Pobierz</button>
+        <p>EUR = <input type="EUR" id="EUR" size="7"></p>
+        <p>USD = <input type="USD" id="USD" size="7"></p>
+        <p>GBP = <input type="GBP" id="GBP" size="7"></p>
+        <p>CHF = <input type="CHF" id="CHF" size="7"></p>
+        
+    </body>
+    <script>
+        function getJSON() {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var parsedData = JSON.parse(this.responseText);
+                var currencies = document.querySelectorAll('[id]');
+                currencies.forEach(function(currency) {
+                    document.getElementById(currency.id).value = parsedData[0].rates.filter(r => r.code === currency.id)[0].mid;
+                });          
+            }
+        };
+        xmlhttp.open("GET", "http://api.nbp.pl/api/exchangerates/tables/a?format=json", true);
+        xmlhttp.send();
+    }
+    </script>
+</html>
+
+
